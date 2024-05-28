@@ -1,10 +1,10 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QPushButton, QLabel, QHBoxLayout, QMenuBar, QAction, QInputDialog, QMessageBox, QProgressDialog
-from PyQt5.QtCore import Qt, QThread, pyqtSlot
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QPushButton, QLabel, QHBoxLayout, QMenuBar, QAction, QInputDialog, QMessageBox, QProgressDialog, QApplication
+from PyQt5.QtCore import Qt, QThread, pyqtSlot, pyqtSignal
 import subprocess
 import platform
 from url_check_worker import URLCheckWorker
 from about_dialog import AboutDialog
-from url_utilities import getStreamURL, extractYouTubePlaylist
+from url_utilities import getStreamURL, extractYouTubePlaylist, extractM3UUrls
 
 class URLChecker(QWidget):
     def __init__(self):
@@ -31,6 +31,8 @@ class URLChecker(QWidget):
     def initUI(self):
         self.setWindowTitle('Comp-Rueba-URL')
         self.setGeometry(100, 100, 400, 200)
+        self.setFixedSize(400, 200)  # Para que no se pueda redimensionar la ventana
+        
         layout = QVBoxLayout()
         menubar = QMenuBar(self)
         
@@ -41,6 +43,7 @@ class URLChecker(QWidget):
         file_menu.addAction(exit_action)
         
         options_menu = menubar.addMenu('Opciones')
+        
         about_action = QAction('About', self)
         about_action.triggered.connect(self.showAboutDialog)
         options_menu.addAction(about_action)
@@ -48,6 +51,10 @@ class URLChecker(QWidget):
         playlist_action = QAction('Extraer URLs de lista de YouTube', self)
         playlist_action.triggered.connect(self.extractPlaylist)
         options_menu.addAction(playlist_action)
+        
+        m3u_action = QAction('Extraer URLs de archivo .m3u', self)
+        m3u_action.triggered.connect(self.extractM3U)
+        options_menu.addAction(m3u_action)
         
         layout.setMenuBar(menubar)
         
@@ -85,6 +92,7 @@ class URLChecker(QWidget):
         self.url_input.setText(url)
         self.result_label.setText('Verificando URL...')
         self.result_label.setStyleSheet("font-weight: bold; font-size: 16px; color: blue;")
+        QApplication.processEvents()  # Fuerza la actualización de la interfaz de usuario
 
         # Emite la señal para verificar la URL en el hilo del trabajador
         self.url_check_worker.check_url_signal.emit(url)
@@ -152,6 +160,27 @@ class URLChecker(QWidget):
                 self.result_label.setStyleSheet("font-weight: bold; font-size: 16px; color: red;")
                 QMessageBox.critical(self, 'Error', 'No se pudieron extraer las URLs de la lista de reproducción o no se encontraron entradas.')
 
+    def extractM3U(self):
+        m3u_url, ok = QInputDialog.getText(self, 'Extraer URLs de archivo .m3u', 'Ingrese la URL del archivo .m3u:')
+        if ok and m3u_url:
+            progress_dialog = QProgressDialog("Extrayendo URLs...", "Cancelar", 0, 100, self)
+            progress_dialog.setWindowTitle('Progreso de extracción')
+            progress_dialog.setWindowModality(Qt.WindowModal)
+            progress_dialog.setMinimumDuration(0)
+
+            self.result_label.setText('Extrayendo URLs...')
+            self.result_label.setStyleSheet("font-weight: bold; font-size: 16px; color: blue;")
+            success = extractM3UUrls(m3u_url, progress_dialog)
+            if success:
+                self.result_label.setText('URLs extraídas y guardadas en listas.txt')
+                self.result_label.setStyleSheet("font-weight: bold; font-size: 16px; color: green;")
+                QMessageBox.information(self, 'Éxito', 'URLs extraídas y guardadas en listas.txt')
+                self.openPlaylistInVLC()
+            else:
+                self.result_label.setText('No se encontraron URLs válidas en el archivo .m3u')
+                self.result_label.setStyleSheet("font-weight: bold; font-size: 16px; color: red;")
+                QMessageBox.critical(self, 'Error', 'No se pudieron extraer URLs válidas del archivo .m3u.')
+
     def openPlaylistInVLC(self):
         try:
             with open('listas.txt', 'r') as file:
@@ -178,8 +207,6 @@ class URLChecker(QWidget):
 
 if __name__ == '__main__':
     import sys
-    from PyQt5.QtWidgets import QApplication
-
     app = QApplication(sys.argv)
     checker = URLChecker()
     checker.show()

@@ -3,6 +3,7 @@ import subprocess
 import platform
 import tempfile
 import yt_dlp
+import time
 
 class URLCheckWorker(QObject):
     url_checked = pyqtSignal(bool)
@@ -12,11 +13,22 @@ class URLCheckWorker(QObject):
         super().__init__()
         self.check_url_signal.connect(self.checkURL)
 
-    def checkURL(self, url):
-        if "youtube.com" in url or "youtu.be" in url:
-            self.checkYouTubeURL(url)
-        else:
-            self.checkGeneralURL(url)
+    def checkURL(self, url, retries=3, delay=5):
+        success = False
+        for attempt in range(retries):
+            if "youtube.com" in url or "youtu.be" in url:
+                success = self.checkYouTubeURL(url)
+            else:
+                success = self.checkGeneralURL(url)
+            
+            if success:
+                self.url_checked.emit(True)
+                return
+            
+            print(f"Intento {attempt + 1} fallido, reintentando en {delay} segundos...")
+            time.sleep(delay)
+        
+        self.url_checked.emit(False)
 
     def checkYouTubeURL(self, url):
         try:
@@ -29,12 +41,12 @@ class URLCheckWorker(QObject):
                 info_dict = ydl.extract_info(url, download=False)
                 video_url = info_dict.get("url", None)
                 if video_url:
-                    self.url_checked.emit(True)
+                    return True
                 else:
-                    self.url_checked.emit(False)
+                    return False
         except Exception as e:
             print(f"Error al verificar la URL de YouTube: {e}")
-            self.url_checked.emit(False)
+            return False
 
     def checkGeneralURL(self, url):
         try:
@@ -59,12 +71,11 @@ class URLCheckWorker(QObject):
                 "access error", "Your input can't be opened",
                 "unable to open", "Could not connect", "Failed to open",
                 "Network is unreachable", "Connection refused", "http stream error",
-                "access stream error", "main stream error", "HTTP 520"
+                "access stream error", "main stream error"
             ]
 
             is_valid = not any(error_message in output for error_message in error_messages)
-
-            self.url_checked.emit(is_valid)
+            return is_valid
         except Exception as e:
             print(f"Error al verificar la URL con VLC: {e}")
-            self.url_checked.emit(False)
+            return False
