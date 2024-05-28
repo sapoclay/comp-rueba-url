@@ -48,11 +48,11 @@ class URLChecker(QWidget):
         about_action.triggered.connect(self.showAboutDialog)
         options_menu.addAction(about_action)
         
-        playlist_action = QAction('Extraer URLs de lista de YouTube', self)
+        playlist_action = QAction('Extraer URLs de lista en YouTube', self)
         playlist_action.triggered.connect(self.extractPlaylist)
         options_menu.addAction(playlist_action)
         
-        m3u_action = QAction('Extraer URLs de archivo .m3u', self)
+        m3u_action = QAction('Extraer URLs de un archivo .m3u', self)
         m3u_action.triggered.connect(self.extractM3U)
         options_menu.addAction(m3u_action)
         
@@ -63,7 +63,7 @@ class URLChecker(QWidget):
         
         button_layout = QHBoxLayout()
         self.check_button = QPushButton('Comprobar URL')
-        self.check_button.setToolTip('Comprueba si la URL proporcionada está activa y es un archivo m3u8, m3u, .ts o un flujo de transmisión multimedia')
+        self.check_button.setToolTip('Comprueba si la URL proporcionada está activa y es un archivo m3u8 o un flujo de transmisión multimedia')
         self.check_button.clicked.connect(self.checkURL)
         button_layout.addWidget(self.check_button)
         
@@ -147,13 +147,13 @@ class URLChecker(QWidget):
             progress_dialog.setWindowModality(Qt.WindowModal)
             progress_dialog.setMinimumDuration(0)
 
-            self.result_label.setText('Extrayendo URLs...')
+            self.result_label.setText('Preparando las URLs a reproducir...')
             self.result_label.setStyleSheet("font-weight: bold; font-size: 16px; color: blue;")
             success = extractYouTubePlaylist(playlist_url, progress_dialog)
             if success:
                 self.result_label.setText('URLs extraídas y guardadas en listas.txt')
                 self.result_label.setStyleSheet("font-weight: bold; font-size: 16px; color: green;")
-                QMessageBox.information(self, 'Éxito', 'URLs extraídas y guardadas en listas.txt')
+                QMessageBox.information(self, 'Éxito', 'URLs extraídas y guardadas en el archivo listas.txt')
                 self.openPlaylistInVLC()
             else:
                 self.result_label.setText('No se encontraron entradas en la lista de reproducción')
@@ -161,14 +161,14 @@ class URLChecker(QWidget):
                 QMessageBox.critical(self, 'Error', 'No se pudieron extraer las URLs de la lista de reproducción o no se encontraron entradas.')
 
     def extractM3U(self):
-        m3u_url, ok = QInputDialog.getText(self, 'Extraer URLs de archivo .m3u', 'Ingrese la URL del archivo .m3u:')
+        m3u_url, ok = QInputDialog.getText(self, 'Extraer URLs de archivo .m3u', 'Escribe la URL del archivo .m3u:')
         if ok and m3u_url:
             progress_dialog = QProgressDialog("Extrayendo URLs...", "Cancelar", 0, 100, self)
             progress_dialog.setWindowTitle('Progreso de extracción')
             progress_dialog.setWindowModality(Qt.WindowModal)
             progress_dialog.setMinimumDuration(0)
 
-            self.result_label.setText('Extrayendo URLs...')
+            self.result_label.setText('Preparando las URLs a reproducir...')
             self.result_label.setStyleSheet("font-weight: bold; font-size: 16px; color: blue;")
             success = extractM3UUrls(m3u_url, progress_dialog)
             if success:
@@ -204,10 +204,3 @@ class URLChecker(QWidget):
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Fallo al abrir VLC: {str(e)}")
 
-
-if __name__ == '__main__':
-    import sys
-    app = QApplication(sys.argv)
-    checker = URLChecker()
-    checker.show()
-    sys.exit(app.exec_())
