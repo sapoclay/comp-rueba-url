@@ -2,8 +2,20 @@ import platform
 import subprocess
 import os
 import urllib.request
-from PyQt5.QtWidgets import QApplication, QMessageBox
+
 import sys
+
+# Función para instalar dependencias de Python desde un archivo requirements.txt
+def install_python_dependencies():
+    requirements_path = '/usr/share/Comp-Rueba-URL/requirements.txt'
+    subprocess.run(['pip3', 'install', '--user', '-r', requirements_path], check=True)
+
+
+# Función para verificar e instalar todas las dependencias necesarias
+def ensure_all_dependencies():
+    install_python_dependencies()
+    ensure_vlc_installed()
+    ensure_ffmpeg_installed()
 
 # Función para instalar VLC en Windows
 def install_vlc_windows():
@@ -46,6 +58,7 @@ def ensure_vlc_installed():
 
 # Función para mostrar un mensaje al usuario de Windows sobre cómo instalar FFmpeg
 def show_ffmpeg_install_message():
+    from PyQt5.QtWidgets import QApplication, QMessageBox
     app = QApplication(sys.argv)
     msg = QMessageBox()
     msg.setIcon(QMessageBox.Information)
@@ -90,17 +103,7 @@ def ensure_ffmpeg_installed():
         except FileNotFoundError:
             install_ffmpeg_linux()
 
-# Función para instalar dependencias de Python desde un archivo requirements.txt
-def install_python_dependencies():
-    requirements_path = '/usr/share/Comp-Rueba-URL/requirements.txt'
-    subprocess.run(['pip', 'install', '--user', '-r', requirements_path], check=True)
 
-
-# Función para verificar e instalar todas las dependencias necesarias
-def ensure_all_dependencies():
-    install_python_dependencies()
-    ensure_vlc_installed()
-    ensure_ffmpeg_installed()
 
 # Llamar a esta función al iniciar el programa para asegurarse de que todas las dependencias estén instaladas
 if __name__ == "__main__":

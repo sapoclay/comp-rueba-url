@@ -2,7 +2,8 @@
 from dependencias import ensure_all_dependencies
 import logging
 
-
+# Verificar e instalar todas las dependencias necesarias
+ensure_all_dependencies()
 # Configurar logging para registrar errores
 logfile_path = '/usr/share/Comp-Rueba-URL/logfile.log'
 logging.basicConfig(filename=logfile_path, level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -13,8 +14,7 @@ import sys
 from PyQt5.QtWidgets import QApplication
 from url_checker import URLChecker
 
-# Verificar e instalar todas las dependencias necesarias
-ensure_all_dependencies()
+
 
 # Función para eliminar listas.txt al salir
 def cleanup():
