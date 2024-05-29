@@ -2,7 +2,7 @@
 
 ![youtube-list](https://github.com/sapoclay/comp-rueba-url/assets/6242827/bb19dffc-48d6-44a6-9d53-880e0a075126)
 
-Un pequeño programa escrito con Python3 para comprobar listas de reproducción m3u8 o urls de streaming. El programa nos dirá si la URL pasada está activa o no, y de estar activa, nos permitirá reproducirla en VLC sin anuncios (en caso de los vídeos de Youtube ... ).
+Un pequeño programa escrito con Python 3.10 para comprobar listas de reproducción m3u8 o urls de streaming. El programa nos dirá si la URL pasada está activa o no, y de estar activa, nos permitirá reproducirla en VLC sin anuncios (en caso de los vídeos de Youtube ... ).
 
 ![URL-no-disponible](https://github.com/sapoclay/comp-rueba-url/assets/6242827/fa15586c-ed28-40ab-9e1c-7e9d8a6f7f1e)
 
@@ -17,6 +17,8 @@ Tanto las listas de Youtube como las listas m3u, tardarán más o menos en carga
 El programa cuenta con un log de errores en su directorio de instalación.
 
 ### A tener en cuenta
+
+Es imprescindible tener instalado Python 3.10 (que es con el que yo desarrollé este código) para que funcione.
 
 Según el servidor que aloje la URL m3u8, es posible que la primera vez que solicite la comprobación aparezca la URL escrita como no disponible, pero si pulsas dos veces, puede funcionar. La respuesta, tardará más o menos en función del tiepo de respuesta del servidor.
 
