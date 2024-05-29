@@ -156,7 +156,7 @@ class URLChecker(QWidget):
                 QMessageBox.information(self, 'Éxito', 'URLs extraídas y guardadas en el archivo listas.txt')
                 self.openPlaylistInVLC()
             else:
-                self.result_label.setText('No se encontraron entradas en la lista de reproducción')
+                self.result_label.setText('Sin URL en la lista de reproducción')
                 self.result_label.setStyleSheet("font-weight: bold; font-size: 16px; color: red;")
                 QMessageBox.critical(self, 'Error', 'No se pudieron extraer las URLs de la lista de reproducción o no se encontraron entradas.')
 

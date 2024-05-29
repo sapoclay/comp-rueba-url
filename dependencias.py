@@ -2,6 +2,8 @@ import platform
 import subprocess
 import os
 import urllib.request
+from PyQt5.QtWidgets import QApplication, QMessageBox
+import sys
 
 # Función para instalar VLC en Windows
 def install_vlc_windows():
@@ -42,14 +44,63 @@ def ensure_vlc_installed():
         except FileNotFoundError:
             install_vlc_linux()
 
+# Función para mostrar un mensaje al usuario de Windows sobre cómo instalar FFmpeg
+def show_ffmpeg_install_message():
+    app = QApplication(sys.argv)
+    msg = QMessageBox()
+    msg.setIcon(QMessageBox.Information)
+    msg.setWindowTitle("FFmpeg no encontrado")
+    msg.setText("FFmpeg no está instalado en su sistema. Por favor, descárguelo e instálelo desde:\nhttps://ffmpeg.org/download.html")
+    msg.setInformativeText("Es importante asegurarse de añadir FFmpeg al PATH del sistema. O pásate a Gnu/Linux!!")
+    msg.setStandardButtons(QMessageBox.Ok)
+    msg.exec_()
+
+# Función para instalar ffmpeg en Windows (descarga el zip pero no configura el PATH)
+def install_ffmpeg_windows():
+    show_ffmpeg_install_message()
+
+# Función para instalar ffmpeg en macOS
+def install_ffmpeg_mac():
+    try:
+        subprocess.run(['brew', '--version'], check=True)
+    except FileNotFoundError:
+        subprocess.run(['/bin/bash', '-c', "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"], check=True)
+    subprocess.run(['brew', 'install', 'ffmpeg'], check=True)
+
+# Función para instalar ffmpeg en Linux (Debian/Ubuntu)
+def install_ffmpeg_linux():
+    subprocess.run(['sudo', 'apt', 'update'], check=True)
+    subprocess.run(['sudo', 'apt', 'install', '-y', 'ffmpeg'], check=True)
+
+# Función para verificar e instalar ffmpeg en el sistema operativo correspondiente
+def ensure_ffmpeg_installed():
+    if platform.system() == 'Windows':
+        try:
+            subprocess.run(['ffmpeg', '--version'], check=True)
+        except FileNotFoundError:
+            install_ffmpeg_windows()
+    elif platform.system() == 'Darwin':
+        try:
+            subprocess.run(['ffmpeg', '--version'], check=True)
+        except FileNotFoundError:
+            install_ffmpeg_mac()
+    elif platform.system() == 'Linux':
+        try:
+            subprocess.run(['ffmpeg', '-version'], check=True)
+        except FileNotFoundError:
+            install_ffmpeg_linux()
+
 # Función para instalar dependencias de Python desde un archivo requirements.txt
 def install_python_dependencies():
-    subprocess.run(['pip', 'install', '-r', 'requirements.txt'], check=True)
+    requirements_path = '/usr/share/Comp-Rueba-URL/requirements.txt'
+    subprocess.run(['pip', 'install', '--user', '-r', requirements_path], check=True)
+
 
 # Función para verificar e instalar todas las dependencias necesarias
 def ensure_all_dependencies():
     install_python_dependencies()
     ensure_vlc_installed()
+    ensure_ffmpeg_installed()
 
 # Llamar a esta función al iniciar el programa para asegurarse de que todas las dependencias estén instaladas
 if __name__ == "__main__":
