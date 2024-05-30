@@ -7,7 +7,7 @@ import sys
 
 # Función para instalar dependencias de Python desde un archivo requirements.txt
 def install_python_dependencies():
-    requirements_path = '/usr/share/Comp-Rueba-URL/requirements.txt'
+    requirements_path = 'requirements.txt'
     subprocess.run(['pip3', 'install', '--user', '-r', requirements_path], check=True)
 
 
