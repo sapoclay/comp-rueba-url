@@ -5,7 +5,7 @@ import logging
 # Verificar e instalar todas las dependencias necesarias
 ensure_all_dependencies()
 # Configurar logging para registrar errores
-logfile_path = '/usr/share/Comp-Rueba-URL/logfile.log'
+logfile_path = 'logfile.log'
 logging.basicConfig(filename=logfile_path, level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 import atexit
