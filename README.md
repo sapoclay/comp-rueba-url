@@ -1,19 +1,31 @@
 ## Comp-Rueba URL Versión 0.5.6
 
-Escrito con: Python 3
-Probado en: Ubuntu 22.04 y 24.04
+![about](https://github.com/user-attachments/assets/a6adc1b3-9e85-4760-b6d4-2456b31e8fd5)
+
+* Escrito con: Python 3
+* Probado en: Ubuntu 22.04 y 24.04
 
 ### Consideraciones
+
+![password](https://github.com/user-attachments/assets/fe7cfcc0-0f3c-47be-9561-ea386e9ac513)
 
 Al iniciar el programa, se nos pedirá nuestra contraseña de usuario por si es necesario instalar alguna de las dependencias necesarias para que todo funcione como debe. Este programa se instalará en un entorno virtual que se creará de forma automática en el directorio en el que se instale el paquete .deb correspondiente.
 
 ![youtube-list](https://github.com/sapoclay/comp-rueba-url/assets/6242827/bb19dffc-48d6-44a6-9d53-880e0a075126)
 
-Un pequeño programa escrito con Python para comprobar listas de reproducción .m3u (que contenga URL .m3u8) o urls de streaming (Por el momento solo Youtube). El programa nos dirá si la URL pasada está activa o no, y de estar activa, nos permitirá reproducirla en VLC sin anuncios (en caso de los vídeos de Youtube ... ). También nos va permitir realizar búsquedas en Youtube y reproducir los vídeos o listas en VLC. Los resultados de las búsquedas todavía están por afinar.
+Un pequeño programa escrito con Python para comprobar listas de reproducción .m3u (que contenga URL .m3u8) o urls de streaming (Por el momento solo Youtube). El programa nos dirá si la URL pasada está activa o no, y de estar activa, nos permitirá reproducirla en VLC sin anuncios (en caso de los vídeos de Youtube ... ). 
+
+![busquedas-en-youtube](https://github.com/user-attachments/assets/3986ce3a-e300-4bdb-a432-ece2a6bc3b21)
+
+También nos va permitir realizar búsquedas en Youtube y reproducir los vídeos o listas en VLC. Los resultados de las búsquedas todavía están por afinar.
 
 ![URL-no-disponible](https://github.com/sapoclay/comp-rueba-url/assets/6242827/fa15586c-ed28-40ab-9e1c-7e9d8a6f7f1e)
 
-Las listas que se extraigan se guardarán en un archivo llamado lista.txt, el cual se va a encontrar en el mismo directorio en el que se instale el programa. Las URL contenidas en las listas m3u, también se guardarán en este archivo. Archivo que debería ir sobreescribiendose tras cada uso. En caso de error se omitirá la URL que genera el error, y solo se guardarán en el archivo lista.txt las URL que estén funcionales en el momento el que se realice la comprobación.
+Las listas que se extraigan se guardarán en un archivo llamado lista.txt, el cual se va a encontrar en el mismo directorio en el que se instale el programa. 
+
+![urls-m3u](https://github.com/user-attachments/assets/dabc62a9-53d9-4f66-a72a-ffc3f08c3852)
+
+Las URL contenidas en las listas m3u, también se guardarán en este archivo. Archivo que debería ir sobreescribiendose tras cada uso. En caso de error se omitirá la URL que genera el error, y solo se guardarán en el archivo lista.txt las URL que estén funcionales en el momento el que se realice la comprobación.
 
 En caso de que no tengas instalado VLC en tu equipo o alguna de las dependencias, deberían instalarse de forma automática. Aun que en Windows ffmpeg habrá que instalarlo manualmente.
 
@@ -42,3 +54,7 @@ Terminada la instalación, solo queda buscar el lanzador del programa en nuestro
 En Ubuntu ... y cosas parecidas, en una terminal (Ctrl+Alt+T), solo tendremos que ejecutar el comando:
 
 ``` sudo apt remove comp-rueba-url ```
+
+En algunos sistemas quizás sea necesario eliminar también el directorio que contenía el programa:
+
+``` sudo rm -rf /usr/share/Comp-Rueba ```
