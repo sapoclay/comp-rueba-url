@@ -1,0 +1,9 @@
+requests
+PyQt5
+youtube-search-python
+yt-dlp
+pytubefix
+wget
+m3u8 
+validators
+python-dateutil
