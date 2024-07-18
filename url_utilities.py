@@ -74,9 +74,12 @@ def extractM3UUrls(file_path, progress_dialog=None):
                 valid_urls.append(url)
             else:
                 print(f"URL no disponible: {url}")
+        # Obtener el directorio de instalación del programa
+        install_dir = os.path.dirname(os.path.realpath(__file__))
+        lista_path = os.path.join(install_dir, 'lista.txt')
         
         if valid_urls:
-            with open('lista.txt', 'w') as f:
+            with open(lista_path, 'w') as f:
                 f.write('\n'.join(valid_urls))
             if progress_dialog:
                 progress_dialog.setValue(100)
