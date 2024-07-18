@@ -256,7 +256,7 @@ class URLChecker(QWidget):
             self.result_label.setStyleSheet("font-weight: bold; font-size: 16px; color: blue;")
             success = extractM3UUrls(file_path, progress_dialog)
             if success:
-                self.result_label.setText('URLs extraídas y guardadas en lista.txt. Abriendo archivo en VLC')
+                self.result_label.setText('URLs guardadas. Abriendo archivo en VLC')
                 self.result_label.setStyleSheet("font-weight: bold; font-size: 16px; color: green;")
                 QMessageBox.information(self, 'Éxito', 'URLs extraídas y guardadas en lista.txt')
                 self.openURLsInVLC()
@@ -283,13 +283,19 @@ class URLChecker(QWidget):
             if not isinstance(urls, list):
                 raise Exception("La entrada proporcionada no es una lista de URLs.")
             
+            # Obtener el directorio de instalación del programa
+            install_dir = os.path.dirname(os.path.realpath(__file__))
+            print(f"Directorio de instalación del programa: {install_dir}")  # Añadido para depuración
+            lista_path = os.path.join(install_dir, 'lista.txt')
+            print(f"Ruta de archivo lista.txt: {lista_path}")  # Añadido para depuración
+            
             progress_dialog = QProgressDialog("Guardando URLs...", "Cancelar", 0, len(urls), self)
             progress_dialog.setWindowTitle("Progreso")
             progress_dialog.setWindowModality(Qt.WindowModal)
             progress_dialog.setValue(0)
             progress_dialog.show()
 
-            with open('lista.txt', 'w') as file:
+            with open(lista_path, 'w') as file:
                 for i, url in enumerate(urls):
                     file.write(url + '\n')
                     progress_dialog.setValue(i + 1)
@@ -307,6 +313,7 @@ class URLChecker(QWidget):
                 return
 
             file_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'lista.txt')
+            print(f"Ruta de archivo lista.txt para VLC: {file_path}")  # Añadido para depuración
 
             if platform.system() == 'Windows':
                 command = ['vlc', '--playlist-enqueue', '--no-video-title-show', '--network-caching=1000', '--ts-seek-percent', '--sout-ts-dts-delay=400', file_path]
