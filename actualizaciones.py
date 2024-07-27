@@ -44,7 +44,7 @@ def instalar_paquete_deb(archivo_deb):
                                  f"Error durante la actualización del programa:\n{error}")
     except Exception as e:
         QMessageBox.critical(None, "Error", f"Error inesperado: {e}")
-
+ 
 class VentanaActualizaciones(QDialog):
     def __init__(self):
         super().__init__()

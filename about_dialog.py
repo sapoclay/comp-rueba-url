@@ -19,7 +19,7 @@ class AboutDialog(QDialog):
         super().__init__(parent)
         self.initUI()
 
-    def initUI(self):
+    def initUI(self): 
         self.setWindowTitle('About')
         self.setFixedSize(400, 200)
         layout = QVBoxLayout()

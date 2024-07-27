@@ -4,7 +4,7 @@ import platform
 import tempfile
 import yt_dlp
 import time
-
+ 
 class URLCheckWorker(QObject):
     url_checked = pyqtSignal(bool)
     check_url_signal = pyqtSignal(str)

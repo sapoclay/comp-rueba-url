@@ -1,7 +1,5 @@
-import re
 import requests
 from yt_dlp import YoutubeDL
-import m3u8
 import validators
 from PyQt5.QtWidgets import QProgressDialog
 import os
@@ -77,7 +75,7 @@ def extractM3UUrls(file_path, progress_dialog=None):
         # Obtener el directorio de instalación del programa
         install_dir = os.path.dirname(os.path.realpath(__file__))
         lista_path = os.path.join(install_dir, 'lista.txt')
-        
+         
         if valid_urls:
             with open(lista_path, 'w') as f:
                 f.write('\n'.join(valid_urls))

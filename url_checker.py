@@ -14,6 +14,7 @@ from pytubefix import Playlist, YouTube
 import yt_dlp
 from datetime import datetime  
 from dateutil.parser import parse as parse_date
+import tempfile
 
 class URLChecker(QWidget):
     def __init__(self):
@@ -57,14 +58,15 @@ class URLChecker(QWidget):
 
     def abrir_archivo_log(self):
         try:
-            log_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'registro.log')
-            if os.path.exists(log_path):
+            temp_dir = tempfile.gettempdir()
+            logfile_path = os.path.join(temp_dir, 'registro.log')
+            if os.path.exists(logfile_path):
                 if platform.system() == 'Windows':
-                    os.startfile(log_path)
+                    os.startfile(logfile_path)
                 elif platform.system() == 'Darwin':
-                    subprocess.Popen(['open', log_path])
+                    subprocess.Popen(['open', logfile_path])
                 elif platform.system() == 'Linux':
-                    subprocess.Popen(['xdg-open', log_path])
+                    subprocess.Popen(['xdg-open', logfile_path])
                 else:
                     raise Exception('Plataforma no compatible')
             else:
@@ -74,9 +76,10 @@ class URLChecker(QWidget):
 
     def eliminar_archivo_log(self):
         try:
-            log_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'registro.log')
-            if os.path.exists(log_path):
-                os.remove(log_path)
+            temp_dir = tempfile.gettempdir()
+            logfile_path = os.path.join(temp_dir, 'registro.log')
+            if os.path.exists(logfile_path):
+                os.remove(logfile_path)
                 QMessageBox.information(self, "Archivo eliminado", "El archivo de registro.log ha sido eliminado.")
             else:
                 QMessageBox.warning(self, "Archivo no encontrado", "El archivo de registro.log no se encuentra.")
