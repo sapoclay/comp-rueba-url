@@ -1,6 +1,6 @@
 ## Comp-Rueba URL Versión 0.5.7
 
-![about](https://github.com/user-attachments/assets/a6adc1b3-9e85-4760-b6d4-2456b31e8fd5)
+![about](https://github.com/user-attachments/assets/6a1cd5fd-0fbd-473e-9437-c730e82a0ed0)
 
 * Escrito con: Python 3
 * Este programa debería funcionar tanto en Windows como en Ubuntu, siempre que tengas instalado Python en el sistema en el que lo ejecutes. Se puede utilizar el código fuente o en Ubuntu se puede utilizar el paquete .DEB que está disponible en la página de lanzamientos de este repositorio.
@@ -34,6 +34,8 @@ Cuando se estraigan las URL de una lista m3u o de Youtube, podremos cerrar el pr
 Tanto las listas de Youtube como las listas m3u, tardarán más o menos en cargarse, según la velocidad de respuesta por parte del servidor y de nuestra conexión a internet.
 
 El programa cuenta con un log de errores en su directorio de instalación. Desde la interfaz del programa podremos consultarlo o directamente eliminarlo (por que con el paso del tiempo irá cogiendo cierto tamaño)
+
+Si este programa se ejecuta en Windows, el sistema de actualización por el momento no funcionará ... eso queda para próximas actualizaciones.
 
 ## Instalar paquete .DEB
 
