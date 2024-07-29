@@ -25,6 +25,9 @@ except Exception as e:
 
 # Función para eliminar listas.txt al salir
 def cleanup():
+    """
+    Elimina el archivo 'listas.txt' en el directorio actual al salir del programa.
+    """
     listas_file = current_directory / 'listas.txt'
     if listas_file.exists():
         listas_file.unlink()
@@ -32,6 +35,14 @@ def cleanup():
 
 # Función principal que inicia la aplicación
 def main():
+    """
+    Función principal que inicia la aplicación PyQt5.
+
+    Verifica si el programa se está ejecutando como administrador en Windows y
+    reinicia como administrador si es necesario. Configura la aplicación, establece
+    un icono personalizado, verifica e instala VLC y FFmpeg si no están instalados,
+    y muestra la ventana principal de la aplicación.
+    """
     if platform.system() == 'Windows' and not is_admin():
         if not run_as_admin():
             sys.exit(0)

@@ -7,6 +7,12 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton, QVBo
 import sys
 
 def obtener_version_actual():
+    """
+    Obtiene la versión actual del programa desde un archivo de configuración.
+
+    Devuelve:
+        str: La versión actual del programa.
+    """
     directorio_actual = os.path.dirname(os.path.abspath(__file__))
     ruta_config = os.path.join(directorio_actual, 'config.ini')
 
@@ -15,9 +21,18 @@ def obtener_version_actual():
     return config['Version']['actual']
 
 def instalar_paquete_deb(archivo_deb):
+    """
+    Instala un paquete .deb usando `apt` y reinicia el programa si la instalación es exitosa.
+
+    Argumentos:
+        archivo_deb (str): La ruta del archivo .deb a instalar.
+
+    Elevación:
+        Exception: Si ocurre algún error inesperado durante la instalación.
+    """
     try:
         contrasena_usuario, ok = QInputDialog.getText(None, "Contraseña de usuario",
-                                                      "Por favor, ingrese su contraseña de usuario:",
+                                                      "Por favor, escribe tu contraseña de usuario:",
                                                       QLineEdit.Password)
         if not ok or not contrasena_usuario:
             return
@@ -46,11 +61,21 @@ def instalar_paquete_deb(archivo_deb):
         QMessageBox.critical(None, "Error", f"Error inesperado: {e}")
  
 class VentanaActualizaciones(QDialog):
+    """
+    Ventana de diálogo que permite buscar e instalar actualizaciones del programa.
+
+    Métodos:
+        __init__(): Inicializa la interfaz de usuario.
+        initUI(): Configura la interfaz de usuario.
+        comprobar_actualizaciones(): Comprueba si hay actualizaciones disponibles e inicia el proceso de instalación si es necesario.
+    """
     def __init__(self):
+        """Inicializa la interfaz de usuario."""
         super().__init__()
         self.initUI()
 
     def initUI(self):
+        """Configura la interfaz de usuario."""
         self.setWindowTitle("Buscar Actualizaciones")
         self.setGeometry(100, 100, 500, 200)
         self.setFixedSize(500, 200)
@@ -72,6 +97,9 @@ class VentanaActualizaciones(QDialog):
         self.setLayout(layout_principal)
 
     def comprobar_actualizaciones(self):
+        """
+        Comprueba si hay actualizaciones disponibles e inicia el proceso de instalación si es necesario.
+        """
         try:
             usuario = 'sapoclay'
             repositorio = 'comp-rueba-url'

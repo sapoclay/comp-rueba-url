@@ -5,6 +5,15 @@ import os
 import configparser
 
 def obtener_version_actual():
+    """
+    Obtiene la versión actual del programa desde un archivo de configuración.
+
+    Esta función lee el archivo `config.ini` ubicado en el mismo directorio que el script actual
+    y devuelve la versión actual especificada en la sección 'Version'.
+
+    Devuelve:
+        str: La versión actual del programa.
+    """
     # Obtener el directorio del archivo que llama a la función
     directorio_actual = os.path.dirname(os.path.abspath(__file__))
     # Combinar el directorio con el nombre del archivo config.ini
@@ -15,11 +24,34 @@ def obtener_version_actual():
     return config['Version']['actual']
 
 class AboutDialog(QDialog):
+    """
+    Diálogo que muestra información sobre el programa, incluyendo el logo y la versión actual.
+
+    Hereda de QDialog y proporciona una interfaz de usuario con un logo y un mensaje que muestra
+    la versión actual del programa. También incluye un botón de "Aceptar" para cerrar el diálogo.
+
+    Métodos:
+        __init__(parent=None): Inicializa el diálogo y configura la interfaz de usuario.
+        initUI(): Configura los elementos de la interfaz de usuario, incluyendo el logo y la información del programa.
+    """
     def __init__(self, parent=None):
+        """
+        Inicializa el diálogo y configura la interfaz de usuario.
+
+        Argumentos:
+            parent (QWidget, optional): El widget padre de este diálogo. Por defecto es None.
+        """
         super().__init__(parent)
         self.initUI()
 
     def initUI(self): 
+        """
+        Configura los elementos de la interfaz de usuario para el diálogo.
+        
+        Configura el título del diálogo, el tamaño fijo, y añade un logo y un texto informativo
+        que incluye la versión actual del programa. También añade un botón de "Aceptar" para
+        cerrar el diálogo.
+        """
         self.setWindowTitle('About')
         self.setFixedSize(400, 200)
         layout = QVBoxLayout()

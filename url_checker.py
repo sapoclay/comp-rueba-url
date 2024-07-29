@@ -10,14 +10,20 @@ import actualizaciones
 from about_dialog import AboutDialog  
 from url_utilities import extractYouTubePlaylist, extractM3UUrls
 from youtubesearchpython import VideosSearch, PlaylistsSearch
-from pytubefix import Playlist, YouTube  
 import yt_dlp
 from datetime import datetime  
 from dateutil.parser import parse as parse_date
 import tempfile
 
 class URLChecker(QWidget):
+    """
+    URLChecker es una clase que representa una aplicación de PyQt5 para verificar la disponibilidad de URLs,
+    extraer URLs de listas de reproducción de YouTube y archivos M3U, y abrir URLs en VLC Media Player.
+    """
     def __init__(self):
+        """
+        Inicializa una instancia de la clase URLChecker.
+        """
         super().__init__()
         self.initUI()
         self.url_check_thread = QThread()
@@ -29,6 +35,12 @@ class URLChecker(QWidget):
 
     @pyqtSlot(bool)
     def handleURLChecked(self, is_available):
+        """
+        Maneja la señal de verificación de URL y actualiza la interfaz de usuario en consecuencia.
+
+        Argumentos:
+            is_available (bool): Indica si la URL está disponible o no.
+        """
         if is_available:
             self.result_label.setText('URL activa')
             self.result_label.setStyleSheet("font-weight: bold; font-size: 16px; color: green;")
@@ -40,16 +52,28 @@ class URLChecker(QWidget):
             self.open_vlc_button.setVisible(False)
 
     def abrir_url_github(self):
+        """
+        Abre la URL del repositorio de GitHub en el navegador web predeterminado.
+        """
         webbrowser.open("https://github.com/sapoclay/comp-rueba-url")
         
     def abrir_vpn(self):
+        """
+        Abre la URL para obtener una VPN gratuita durante 30 días en el navegador web predeterminado.
+        """
         webbrowser.open("https://www.expressvpn.com/refer-a-friend/30-days-free?locale=es&referrer_id=40141467&utm_campaign=referrals&utm_medium=copy_link&utm_source=referral_dashboard")
 
     def showAboutDialog(self):
+        """
+        Muestra el cuadro de diálogo "About" de la aplicación.
+        """
         dialog = AboutDialog(self)
         dialog.exec_()
     
     def abrir_ventana_actualizaciones(self):
+        """
+        Abre la ventana de actualizaciones, si ocurre un error muestra un mensaje crítico.
+        """
         try:
             ventana_actualizaciones = actualizaciones.VentanaActualizaciones()
             ventana_actualizaciones.exec_()
@@ -57,6 +81,9 @@ class URLChecker(QWidget):
             QMessageBox.critical(self, "Error", f"Error al abrir ventana de actualizaciones: {str(e)}")
 
     def abrir_archivo_log(self):
+        """
+        Abre el archivo de registro en el sistema operativo predeterminado.
+        """
         try:
             temp_dir = tempfile.gettempdir()
             logfile_path = os.path.join(temp_dir, 'registro.log')
@@ -75,6 +102,9 @@ class URLChecker(QWidget):
             QMessageBox.critical(self, "Error", f"Error al abrir el archivo de registro.log: {str(e)}")
 
     def eliminar_archivo_log(self):
+        """
+        Elimina el archivo de registro del sistema operativo.
+        """
         try:
             temp_dir = tempfile.gettempdir()
             logfile_path = os.path.join(temp_dir, 'registro.log')
@@ -87,6 +117,9 @@ class URLChecker(QWidget):
             QMessageBox.critical(self, "Error", f"Error al eliminar el archivo de registro.log: {str(e)}")
 
     def initUI(self):
+        """
+        Inicializa la interfaz de usuario de la aplicación.
+        """
         self.setWindowTitle('Comp-Rueba-URL')
         self.setGeometry(100, 100, 400, 200)
         self.setFixedSize(400, 200)
@@ -170,6 +203,9 @@ class URLChecker(QWidget):
         self.setLayout(layout)
 
     def checkURL(self):
+        """
+        Comprueba la URL proporcionada para verificar si está activa y es un archivo m3u8 o un flujo de transmisión multimedia.
+        """
         url = self.url_input.text().strip()
         self.url_input.setText(url)
         self.result_label.setText('Verificando URL...')
@@ -178,6 +214,9 @@ class URLChecker(QWidget):
         self.url_check_worker.check_url_signal.emit(url)
 
     def clearURL(self):
+        """
+        Borra el contenido del campo de entrada de URL.
+        """
         self.url_input.clear()
         self.result_label.clear()
         self.open_vlc_button.setVisible(False)
@@ -208,6 +247,9 @@ class URLChecker(QWidget):
             QMessageBox.critical(self, "Error", f"Error al abrir VLC: {str(e)}")
             
     def loadListInVLC(self):
+        """
+        Carga una lista de canales en VLC Media Player desde un archivo seleccionado por el usuario.
+        """
         file_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'lista.txt')
         if os.path.exists(file_path):
             self.openURLsInVLC(file_path)
@@ -216,6 +258,9 @@ class URLChecker(QWidget):
 
 
     def closeEvent(self, event):
+        """
+        Muestra un mensaje para a la hora de cerrar el programa.
+        """
         reply = QMessageBox.question(self, 'Confirmar salida', '¿Está seguro de que desea cerrar la aplicación?', QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.Yes:
             event.accept()
@@ -223,6 +268,9 @@ class URLChecker(QWidget):
             event.ignore()
 
     def isVLCInstalled(self):
+        """
+        Comprueba si VLC está instalado, según el sistema operativo en el que se ejecute el programa.
+        """
         try:
             if platform.system() == 'Windows':
                 subprocess.call(['vlc', '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -242,12 +290,18 @@ class URLChecker(QWidget):
         self.results_window.show()
 
     def extractPlaylist(self):
+        """
+        Extrae URLs de una lista de reproducción de YouTube y las muestra en un cuadro de diálogo.
+        """
         url, ok = QInputDialog.getText(self, 'Extraer URLs de lista de YouTube', 'Introduce la URL de la lista de reproducción de YouTube:')
         if ok and url:
             self.extractAndOpenPlaylistInVLC(url)
 
 
     def extractM3U(self):
+        """
+        Extrae URLs de un archivo M3U seleccionado por el usuario y las muestra en un cuadro de diálogo.
+        """
         file_path, _ = QFileDialog.getOpenFileName(self, 'Seleccionar archivo .m3u', '', 'Archivos .m3u (*.m3u);;Archivos .m3u8 (*.m3u8)')
         if file_path:
             progress_dialog = QProgressDialog("Extrayendo URLs...", "Cancelar", 0, 100, self)
@@ -334,7 +388,29 @@ class URLChecker(QWidget):
 
 
 class YoutubeSearchWindow(QDialog):
+    """
+    YoutubeSearchWindow es una clase que representa una ventana de diálogo de PyQt5 para buscar videos y listas de reproducción en YouTube.
+
+    Atributos:
+        search_input (QLineEdit): Campo de entrada para el término de búsqueda.
+        results_list (QListWidget): Lista para mostrar los resultados de la búsqueda.
+
+    Métodos:
+        __init__(self, parent=None): Inicializa la instancia de la clase.
+        searchYouTube(self): Realiza la búsqueda en YouTube y muestra los resultados.
+        paginatedSearch(self, searchClass, query, max_results): Realiza una búsqueda paginada en YouTube.
+        parse_time(self, time_str): Analiza una cadena de tiempo y la convierte en un objeto datetime.
+        itemDoubleClicked(self, item): Maneja el evento de doble clic en un elemento de la lista de resultados.
+        showNoResultsMessage(self, query): Muestra un mensaje de información cuando no se encuentran resultados.
+        closeEvent(self, event): Maneja el evento de cierre de la ventana.
+    """
     def __init__(self, parent=None):
+        """
+        Inicializa una instancia de la clase YoutubeSearchWindow.
+
+        Argumentos:
+            parent (QWidget, opcional): El widget padre de esta ventana de diálogo. Por defecto es None.
+        """
         super().__init__(parent)
         self.setWindowTitle('Buscar en YouTube')
         self.setGeometry(150, 150, 500, 400)
@@ -356,6 +432,9 @@ class YoutubeSearchWindow(QDialog):
         self.setLayout(layout)
 
     def searchYouTube(self):
+        """
+        Realiza una búsqueda en YouTube y muestra los resultados en la lista de resultados.
+        """
         query = self.search_input.text().strip()
         if query:
             self.results_list.clear()
@@ -392,6 +471,17 @@ class YoutubeSearchWindow(QDialog):
                 self.results_list.addItem(item)
 
     def paginatedSearch(self, searchClass, query, max_results):
+        """
+        Realiza una búsqueda paginada en YouTube utilizando la clase de búsqueda especificada.
+
+        Argumentos:
+            searchClass (class): Clase de búsqueda a utilizar (VideosSearch o PlaylistsSearch).
+            query (str): Término de búsqueda.
+            max_results (int): Número máximo de resultados a obtener.
+
+        Devuelve:
+            list: Lista de resultados de la búsqueda.
+        """
         all_results = []
         search_instance = searchClass(query, limit=20)
         next_page = search_instance.result().get('nextPageToken')
@@ -405,6 +495,15 @@ class YoutubeSearchWindow(QDialog):
         return all_results[:max_results]
 
     def parse_time(self, time_str):
+        """
+        Analiza una cadena de tiempo y la convierte en un objeto datetime.
+
+        Argumentos:
+            time_str (str): Cadena de tiempo a analizar.
+
+        Devuelve:
+            datetime: Objeto datetime correspondiente a la cadena de tiempo analizada.
+        """
         if not time_str:
             return datetime(1970, 1, 1)
         try:
@@ -413,6 +512,12 @@ class YoutubeSearchWindow(QDialog):
             return datetime(1970, 1, 1)
 
     def itemDoubleClicked(self, item):
+        """
+        Maneja el evento de doble clic en un elemento de la lista de resultados.
+
+        Argumentos:
+            item (QListWidgetItem): Elemento de la lista de resultados que fue doble clickeado.
+        """
         url = item.data(Qt.UserRole)
         if url:
             if 'playlist' in url:
@@ -422,12 +527,33 @@ class YoutubeSearchWindow(QDialog):
                 self.close()
 
     def showNoResultsMessage(self, query):
+        """
+        Muestra un mensaje de información cuando no se encuentran resultados para la búsqueda.
+
+        Argumentos:
+            query (str): Término de búsqueda que no produjo resultados.
+        """
         QMessageBox.information(self, 'Sin Resultados', f'No se encontraron resultados para "{query}".', QMessageBox.Ok)
 
     def closeEvent(self, event):
+        """
+        Maneja el evento de cierre de la ventana.
+
+        Argumentos:
+            event (QCloseEvent): Evento de cierre.
+        """
         self.close()
 
 def get_stream_url(url):
+    """
+    Obtiene la URL del flujo de video de un video de YouTube utilizando yt_dlp.
+
+    Argumentos:
+        url (str): La URL del video de YouTube.
+
+    Devuelve:
+        str: La URL del flujo de video.
+    """
     ydl_opts = {
         'format': 'best',
         'quiet': True,
@@ -438,6 +564,11 @@ def get_stream_url(url):
         return info_dict['url']
 
 if __name__ == '__main__':
+    """
+    Punto de entrada principal de la aplicación.
+
+    Crea y muestra la ventana principal de la aplicación URLChecker.
+    """
     app = QApplication(sys.argv)
     window = URLChecker()
     window.show()

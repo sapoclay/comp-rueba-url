@@ -7,6 +7,43 @@ import ctypes
 from pathlib import Path
 from PyQt5.QtWidgets import QApplication, QMessageBox
 
+"""
+Este módulo proporciona funciones para gestionar la instalación de dependencias necesarias para el proyecto,
+así como para verificar y manejar la instalación de software adicional requerido en diferentes sistemas operativos.
+
+Funciones incluidas:
+
+1. **is_admin()**: Verifica si el script se está ejecutando con privilegios de administrador en Windows.
+
+2. **run_as_admin()**: Intenta elevar los privilegios del script a administrador en Windows.
+
+3. **install_python_dependencies()**: Instala las dependencias de Python especificadas en el archivo `requirements.txt`.
+
+4. **ensure_all_dependencies()**: Verifica e instala todas las dependencias necesarias, incluyendo VLC y FFmpeg.
+
+5. **install_vlc_windows()**: Descarga e instala VLC en sistemas Windows si no está presente.
+
+6. **get_vlc_path()**: Obtiene la ruta del ejecutable de VLC en sistemas Windows.
+
+7. **install_vlc_mac()**: Instala VLC en sistemas macOS usando Homebrew.
+
+8. **install_vlc_linux()**: Instala VLC en sistemas Linux (Debian/Ubuntu) usando APT.
+
+9. **ensure_vlc_installed()**: Verifica e instala VLC en el sistema operativo correspondiente.
+
+10. **show_ffmpeg_install_message()**: Muestra un mensaje al usuario de Windows sobre cómo instalar FFmpeg.
+
+11. **install_ffmpeg_windows()**: Muestra un mensaje de instalación de FFmpeg en Windows.
+
+12. **install_ffmpeg_mac()**: Instala FFmpeg en sistemas macOS usando Homebrew.
+
+13. **install_ffmpeg_linux()**: Instala FFmpeg en sistemas Linux (Debian/Ubuntu) usando APT.
+
+14. **ensure_ffmpeg_installed()**: Verifica e instala FFmpeg en el sistema operativo correspondiente.
+
+Al iniciar el script, se verifica si el sistema operativo es Windows y si el script tiene privilegios de administrador. Luego, se asegura que todas las dependencias necesarias estén instaladas.
+"""
+
 # Función para verificar y elevar privilegios en Windows
 def is_admin():
     try:

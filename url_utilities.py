@@ -1,12 +1,21 @@
 import requests
 from yt_dlp import YoutubeDL
-import validators
 from PyQt5.QtWidgets import QProgressDialog
 import os
 
 
 # Función para verificar si una URL está disponible con tiempo de espera y manejo de excepciones
 def isURLAvailable(url, timeout=10):
+    """
+    Verifica si una URL está disponible.
+
+    Parámetros:
+        url (str): La URL a verificar.
+        timeout (int, optional): Tiempo de espera para la solicitud en segundos. Por defecto es 10 segundos.
+
+    Devuelve:
+        bool: True si la URL está disponible (código de estado 200), False en caso contrario.
+    """
     try:
         response = requests.head(url, allow_redirects=True, timeout=timeout)
         return response.status_code == 200
@@ -17,12 +26,32 @@ def isURLAvailable(url, timeout=10):
     
 # Función para obtener la URL de streaming de una URL dada
 def getStreamURL(url):
+    """
+    Obtiene la URL de streaming de una URL dada.
+
+    Parámetros:
+        url (str): La URL de la cual se quiere obtener el streaming.
+
+    Devuelve:
+        str: La URL de streaming.
+    """
     ydl_opts = {'format': 'best', 'quiet': True, 'noplaylist': True}
     with YoutubeDL(ydl_opts) as ydl:
         info_dict = ydl.extract_info(url, download=False)
         return info_dict['url']
 
+# Función para extraer las URL de una lista de Youtube
 def extractYouTubePlaylist(playlist_url, progress_dialog=None):
+    """
+    Extrae las URLs de streaming de una lista de reproducción de YouTube.
+
+    Parámetros:
+        playlist_url (str): La URL de la lista de reproducción de YouTube.
+        progress_dialog (QProgressDialog, optional): Un diálogo de progreso para actualizar mientras se extraen las URLs.
+
+    Devuelve:
+        list: Una lista de URLs de streaming de los videos en la lista de reproducción.
+    """
     ydl_opts = {
         'quiet': True,
         'extract_flat': True,
@@ -51,9 +80,18 @@ def extractYouTubePlaylist(playlist_url, progress_dialog=None):
     
     return urls
 
-
-
+# Función para extraer las URL válidas de un listado m3u
 def extractM3UUrls(file_path, progress_dialog=None):
+    """
+    Extrae URLs válidas de un archivo M3U.
+
+    Parámetros:
+        file_path (str): La ruta del archivo M3U.
+        progress_dialog (QProgressDialog, optional): Un diálogo de progreso para actualizar mientras se extraen las URLs.
+
+    Devuelve:
+        bool: True si se encontraron y guardaron URLs válidas, False en caso contrario.
+    """
     try:
         with open(file_path, 'r') as file:
             lines = file.readlines()

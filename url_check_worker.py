@@ -6,14 +6,37 @@ import yt_dlp
 import time
  
 class URLCheckWorker(QObject):
+    """
+    Clase que se encarga de verificar la validez de URLs, tanto de YouTube como generales, utilizando
+    yt_dlp y VLC respectivamente. La clase emite señales indicando el resultado de la verificación.
+
+    Atributos:
+        url_checked (pyqtSignal): Señal emitida cuando la URL ha sido verificada, con un valor booleano indicando éxito o fallo.
+        check_url_signal (pyqtSignal): Señal utilizada para iniciar la verificación de una URL.
+
+    Métodos:
+        __init__(): Inicializa la instancia y conecta la señal check_url_signal al método checkURL.
+        checkURL(url, retries=3, delay=5): Verifica la URL proporcionada, reintentando en caso de fallo.
+        checkYouTubeURL(url): Verifica si una URL de YouTube es válida utilizando yt_dlp.
+        checkGeneralURL(url): Verifica si una URL general es válida utilizando VLC.
+    """
     url_checked = pyqtSignal(bool)
     check_url_signal = pyqtSignal(str)
 
     def __init__(self):
+        """Inicializa la instancia de URLCheckWorker y conecta la señal check_url_signal al método checkURL."""
         super().__init__()
         self.check_url_signal.connect(self.checkURL)
 
     def checkURL(self, url, retries=3, delay=5):
+        """
+        Verifica la URL proporcionada, reintentando en caso de fallo.
+
+        Argumentos:
+            url (str): La URL a verificar.
+            retries (int): Número de intentos de verificación en caso de fallo. Por defecto es 3.
+            delay (int): Tiempo de espera en segundos entre reintentos. Por defecto es 5.
+        """
         success = False
         for attempt in range(retries):
             if "youtube.com" in url or "youtu.be" in url:
@@ -31,6 +54,15 @@ class URLCheckWorker(QObject):
         self.url_checked.emit(False)
 
     def checkYouTubeURL(self, url):
+        """
+        Verifica si una URL de YouTube es válida utilizando yt_dlp.
+
+        Args:
+            url (str): La URL de YouTube a verificar.
+
+        Returns:
+            bool: True si la URL es válida, False en caso contrario.
+        """
         try:
             ydl_opts = {
                 'quiet': True,
@@ -49,6 +81,15 @@ class URLCheckWorker(QObject):
             return False
 
     def checkGeneralURL(self, url):
+        """
+        Verifica si una URL general es válida utilizando VLC.
+
+        Args:
+            url (str): La URL general a verificar.
+
+        Returns:
+            bool: True si la URL es válida, False en caso contrario.
+        """
         try:
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
                 log_file = temp_file.name

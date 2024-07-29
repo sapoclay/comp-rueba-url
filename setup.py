@@ -12,6 +12,11 @@ VENV_DIR = "venv"
 
 # Creación de archivo .log
 def setup_logging():
+    """
+    Configura el sistema de logging para registrar mensajes en un archivo y en la consola.
+
+    Crea un archivo 'registro.log' en el directorio temporal del sistema y establece el nivel de logging a DEBUG.
+    """
     try:
         temp_dir = tempfile.gettempdir()
         log_path = os.path.join(temp_dir, 'registro.log')
@@ -30,12 +35,27 @@ def setup_logging():
 
 # Función para mostrar mensajes al usuario en una ventana de progreso
 def show_progress(message, progress_label, progress_percentage):
+    """
+    Muestra mensajes de progreso al usuario.
+
+    Parámetros:
+        message (str): El mensaje a mostrar.
+        progress_label (tk.Label): El widget de etiqueta de progreso para actualizar.
+        progress_percentage (int): El porcentaje de progreso a mostrar.
+    """
     if progress_label:
         progress_label.config(text=f"{progress_percentage}% - {message}")
         progress_label.update_idletasks()
 
 # Función para verificar la instalación de pip y venv, y si es necesario, instalarlos
 def check_install_dependencies(password, progress_label):
+    """
+    Verifica e instala las dependencias 'pip' y 'venv' si no están instaladas.
+
+    Parámetros:
+        password (str): La contraseña del usuario para usar con 'sudo' en sistemas basados en Unix.
+        progress_label (tk.Label): El widget de etiqueta de progreso para actualizar.
+    """
     try:
         import pip
         logging.debug("pip ya está instalado.")
@@ -54,6 +74,12 @@ def check_install_dependencies(password, progress_label):
 
 # Instalación de pip
 def install_pip(password):
+    """
+    Instala 'pip'.
+
+    Parámetros:
+        password (str): La contraseña del usuario para usar con 'sudo' en sistemas basados en Unix.
+    """
     if platform.system() == 'Windows':
         subprocess.check_call([sys.executable, '-m', 'ensurepip'])
     else:
@@ -61,6 +87,12 @@ def install_pip(password):
 
 # Instalación de venv
 def install_venv(password):
+    """
+    Instala 'venv'.
+
+    Parámetros:
+        password (str): La contraseña del usuario para usar con 'sudo' en sistemas basados en Unix.
+    """
     if platform.system() == 'Windows':
         subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'virtualenv'])
     else:
@@ -68,6 +100,13 @@ def install_venv(password):
 
 # Instalación de paquetes usando apt-get en Ubuntu
 def install_package(password, package_name):
+    """
+    Instala un paquete usando 'apt-get' en sistemas basados en Unix.
+
+    Parámetros:
+        password (str): La contraseña del usuario para usar con 'sudo'.
+        package_name (str): El nombre del paquete a instalar.
+    """
     try:
         proc = subprocess.run(['sudo', '-S', 'apt-get', 'install', '-y', package_name],
                               input=password.encode(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -81,6 +120,15 @@ def install_package(password, package_name):
 
 # Buscar o crear el entorno virtual en el que ejecutar el programa
 def find_or_create_venv(progress_label):
+    """
+    Busca o crea un entorno virtual en el directorio del script.
+
+    Parámetros:
+        progress_label (tk.Label): El widget de etiqueta de progreso para actualizar.
+
+    Devuelve:
+        str: La ruta del entorno virtual.
+    """
     script_dir = os.path.dirname(os.path.realpath(__file__))
     venv_path = os.path.join(script_dir, VENV_DIR)
     
@@ -93,6 +141,13 @@ def find_or_create_venv(progress_label):
 
 # Creación del entorno virtual
 def create_venv(venv_path, progress_label):
+    """
+    Crea un entorno virtual en la ruta especificada.
+
+    Parámetros:
+        venv_path (str): La ruta donde se creará el entorno virtual.
+        progress_label (tk.Label): El widget de etiqueta de progreso para actualizar.
+    """
     try:
         logging.debug(f"Creando entorno virtual en {venv_path}")
         show_progress("Creando entorno virtual...", progress_label, 30)
@@ -104,6 +159,13 @@ def create_venv(venv_path, progress_label):
 
 # Instalación de dependencias del archivo requirements.txt
 def install_dependencies(venv_path, progress_label):
+    """
+    Instala las dependencias listadas en 'requirements.txt' dentro del entorno virtual.
+
+    Parámetros:
+        venv_path (str): La ruta del entorno virtual.
+        progress_label (tk.Label): El widget de etiqueta de progreso para actualizar.
+    """
     try:
         script_dir = os.path.dirname(os.path.realpath(__file__))
         requirements_path = os.path.join(script_dir, 'requirements.txt')
@@ -117,6 +179,13 @@ def install_dependencies(venv_path, progress_label):
 
 # Instalación de PyQt5 dentro del entorno virtual
 def install_pyqt5(venv_path, progress_label):
+    """
+    Instala PyQt5 dentro del entorno virtual.
+
+    Parámetros:
+        venv_path (str): La ruta del entorno virtual.
+        progress_label (tk.Label): El widget de etiqueta de progreso para actualizar.
+    """
     try:
         python_executable = os.path.join(venv_path, 'bin', 'python') if os.name == 'posix' else os.path.join(venv_path, 'Scripts', 'python')
         logging.debug("Instalando PyQt5...")
@@ -129,6 +198,15 @@ def install_pyqt5(venv_path, progress_label):
 
 # Verificar la contraseña del usuario actual en Ubuntu
 def verify_password(password):
+    """
+    Verifica la contraseña del usuario actual en sistemas basados en Unix.
+
+    Parámetros:
+        password (str): La contraseña del usuario.
+
+    Devuelve:
+        bool: True si la contraseña es correcta, False en caso contrario.
+    """
     try:
         # Ejecutar un comando que requiere sudo para verificar la contraseña
         proc = subprocess.run(['sudo', '-S', 'echo', 'Password is correct'],
@@ -145,6 +223,12 @@ def verify_password(password):
 
 # Pedir la contraseña al usuario mediante tkinter en Windows
 def prompt_password():
+    """
+    Solicita la contraseña al usuario mediante una interfaz gráfica en sistemas basados en Unix.
+
+    Devuelve:
+        str: La contraseña del usuario.
+    """
     if platform.system() == 'Windows':
         return None  # En Windows no se solicita contraseña
     else:
@@ -164,6 +248,12 @@ def prompt_password():
             raise
 
 def show_error_message(message):
+    """
+    Muestra un mensaje de error al usuario.
+
+    Parámetros:
+        message (str): El mensaje de error a mostrar.
+    """
     if platform.system() == 'Windows':
         root = tk.Tk()
         root.withdraw()
@@ -172,6 +262,9 @@ def show_error_message(message):
         subprocess.run(['zenity', '--error', '--title=Error', f'--text={message}'])
 
 def main():
+    """
+    Función principal del script que configura el entorno y ejecuta el programa.
+    """
     setup_logging()
     try:
         password = prompt_password()
@@ -206,6 +299,12 @@ def main():
 
 # Después de la instalación/comprobación, se lanza el index.py
 def after_installation(venv_path):
+    """
+    Ejecuta el script principal 'index.py' después de la instalación/comprobación.
+
+    Parámetros:
+        venv_path (str): La ruta del entorno virtual.
+    """
     try:
         if os.name == 'posix':
             python_executable = os.path.join(venv_path, 'bin', 'python')
