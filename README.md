@@ -13,11 +13,11 @@ Al iniciar el programa, se nos pedirá nuestra contraseña de usuario por si es 
 
 ![youtube-list](https://github.com/sapoclay/comp-rueba-url/assets/6242827/bb19dffc-48d6-44a6-9d53-880e0a075126)
 
-Un pequeño programa escrito con Python para comprobar listas de reproducción .m3u (que contenga URL .m3u8) o urls de streaming (Por el momento solo Youtube). El programa nos dirá si la URL pasada está activa o no, y de estar activa, nos permitirá reproducirla en VLC sin anuncios (en caso de los vídeos de Youtube ... ). 
+Con este pequeño programa programa escrito con Python, se pueden comprobar listas de reproducción .m3u (que contenga URL .m3u8) o urls de streaming (Por el momento solo Youtube). El programa nos dirá si la URL pasada está activa o no, y de estar activa, nos permitirá reproducirla en VLC sin anuncios (en caso de los vídeos de Youtube ... ). 
 
 ![busquedas-en-youtube](https://github.com/user-attachments/assets/3986ce3a-e300-4bdb-a432-ece2a6bc3b21)
 
-También nos va permitir realizar búsquedas en Youtube y reproducir los vídeos o listas en VLC. Los resultados de las búsquedas todavía están por afinar.
+También nos va permitir realizar búsquedas en Youtube y reproducir los vídeos o listas en VLC. Los resultados de las búsquedas todavía están por afinar ... 
 
 ![URL-no-disponible](https://github.com/sapoclay/comp-rueba-url/assets/6242827/fa15586c-ed28-40ab-9e1c-7e9d8a6f7f1e)
 
@@ -58,3 +58,13 @@ En Ubuntu ... y cosas parecidas, en una terminal (Ctrl+Alt+T), solo tendremos qu
 En algunos sistemas quizás sea necesario eliminar también el directorio que contenía el programa:
 
 ``` sudo rm -rf /usr/share/Comp-Rueba ```
+## Ejemplos de uso en Ubuntu 22.04 y Windows 11
+
+https://github.com/user-attachments/assets/6dd8b853-f230-4d1a-b57e-5f94f6048ee1
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+https://github.com/user-attachments/assets/ee27173e-d952-4d02-b104-d7b48ad31b68
+
+
+
