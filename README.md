@@ -35,6 +35,8 @@ Tanto las listas de Youtube como las listas m3u, tardarán más o menos en carga
 
 El programa cuenta con un log de errores en su directorio de instalación. Desde la interfaz del programa podremos consultarlo o directamente eliminarlo (por que con el paso del tiempo irá cogiendo cierto tamaño)
 
+![icono-bandeja-sistema](https://github.com/user-attachments/assets/5f6dc87d-0168-4102-b65b-a55e118e84e7)
+
 Además cuenta con un icono en la bandeja del sistema, desde el que podremos realizar algunas acciones sobre el programa.
 
 Si este programa se ejecuta en Windows, el sistema de actualización por el momento no funcionará ... eso queda para próximas actualizaciones.
