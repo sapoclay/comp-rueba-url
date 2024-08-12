@@ -3,8 +3,9 @@ import os
 import subprocess
 import platform
 import webbrowser
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QPushButton, QLabel, QHBoxLayout, QMenuBar, QAction, QInputDialog, QMessageBox, QListWidget, QListWidgetItem, QApplication, QProgressDialog, QFileDialog, QMainWindow, QDialog
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QPushButton, QLabel, QHBoxLayout, QMenuBar, QAction, QInputDialog, QMessageBox, QListWidget, QListWidgetItem, QApplication, QProgressDialog, QFileDialog, QMainWindow, QDialog, QSystemTrayIcon, QMenu, QAction
 from PyQt5.QtCore import Qt, QThread, pyqtSlot, pyqtSignal
+from PyQt5.QtGui import QIcon
 from url_check_worker import URLCheckWorker
 import actualizaciones
 from about_dialog import AboutDialog  
@@ -14,6 +15,8 @@ import yt_dlp
 from datetime import datetime  
 from dateutil.parser import parse as parse_date
 import tempfile
+from pathlib import Path
+import logging
 
 class URLChecker(QWidget):
     """
@@ -120,6 +123,47 @@ class URLChecker(QWidget):
         """
         Inicializa la interfaz de usuario de la aplicación.
         """
+        # Directorio del script actual
+        current_directory = Path(__file__).parent
+
+        # Establecer un icono personalizado
+        icon_path = current_directory / 'icono-Comp-Rueba-URL.ico'
+        if icon_path.exists():
+            self.setWindowIcon(QIcon(str(icon_path)))
+            self.tray_icon = QSystemTrayIcon(QIcon(str(icon_path)), self)
+            self.tray_icon.setToolTip("Comp-Rueba-URL")
+
+            # Crear un menú para el icono de la bandeja del sistema
+            tray_menu = QMenu(self)
+            
+            # Acción para abrir la suscripción de VPN
+            vpn_action = QAction("30 días gratis de VPN", self)
+            vpn_action.triggered.connect(self.abrir_vpn)
+            tray_menu.addAction(vpn_action)
+            
+            # Acción para restaurar la ventana principal
+            restore_action = QAction("Restaurar", self)
+            restore_action.triggered.connect(self.restore_window)
+            tray_menu.addAction(restore_action)
+            
+            # Acción para abrir la ventana "Acerca de"
+            about_action = QAction("Acerca de", self)
+            about_action.triggered.connect(self.showAboutDialog)
+            tray_menu.addAction(about_action)
+            
+            
+            # Acción para salir de la aplicación
+            exit_action = QAction("Salir", self)
+            exit_action.triggered.connect(self.close)
+            tray_menu.addAction(exit_action)
+
+            # Configurar el menú de la bandeja
+            self.tray_icon.setContextMenu(tray_menu)
+            self.tray_icon.show()
+
+        else:
+            logging.warning(f"Icono no encontrado en {icon_path}")
+
         self.setWindowTitle('Comp-Rueba-URL')
         self.setGeometry(100, 100, 400, 200)
         self.setFixedSize(400, 200)
@@ -201,6 +245,14 @@ class URLChecker(QWidget):
         layout.addWidget(self.open_vlc_button)
 
         self.setLayout(layout)
+    
+    def restore_window(self):
+        """
+        Restaura la ventana principal si está minimizada o escondida.
+        """
+        if self.isMinimized() or not self.isVisible():
+            self.showNormal()
+            self.activateWindow()
 
     def checkURL(self):
         """
